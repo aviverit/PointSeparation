@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -16,15 +18,23 @@ public class Main {
         //Optionally format filenames before opening so as to
         for (File file : dir.listFiles()) {
             fileCounter++;
+            List<int[]> coordList = new ArrayList<int[]>();
 
             Scanner scan = null;
             try {
                 scan = new Scanner(file);
+                coordCounter=scan.nextInt();
 
+                while(scan.hasNextInt()) {
+                    coordList.add(new int[]{scan.nextInt(), scan.nextInt()});
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             scan.close();
+
+            Separator sep = new Separator(coordCounter, coordList);
+
 
             Writer wr = null;
             try {
