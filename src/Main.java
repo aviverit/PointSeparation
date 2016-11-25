@@ -16,13 +16,13 @@ public class Main {
         int j=0;
 
         //Optionally format filenames before opening so as to
-        for (File file : dir.listFiles()) {
+        for (File ifile : dir.listFiles()) {
             fileCounter++;
             List<int[]> coordList = new ArrayList<int[]>();
 
             Scanner scan = null;
             try {
-                scan = new Scanner(file);
+                scan = new Scanner(ifile);
                 coordCounter=scan.nextInt();
 
                 while(scan.hasNextInt()) {
@@ -34,12 +34,25 @@ public class Main {
             scan.close();
 
             Separator sep = new Separator(coordCounter, coordList);
+            List<String> lineList = new ArrayList<String>();
 
+            sep.setLines();
+            lineCounter=sep.getLineCount();
+            lineList=sep.getLines();
+
+            for(File ofile: solDir.listFiles()){
+                if(!ofile.isDirectory()) {
+                    ofile.delete();
+                }
+            }
 
             Writer wr = null;
             try {
-                wr = new FileWriter("Instance"+new Integer(fileCounter).toString()+".txt");
-                wr.write(new Integer(lineCounter).toString());
+                wr = new FileWriter( "./output_greedy/greedy_solution"+new Integer(fileCounter).toString()+".txt");
+
+                for(int k=0;k<lineCounter;k++) {
+                    wr.write(lineList.get(k));
+                }
                 wr.close();
             } catch (IOException e) {
                 e.printStackTrace();

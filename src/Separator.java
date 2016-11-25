@@ -5,7 +5,7 @@ public class Separator {
 
     private int lineCount=0;
     private int coordCount=0;
-    private String line;
+    private int line;
     private List<int[]> coordList = new ArrayList<int[]>();
     private List<String> lineList = new ArrayList<String>();
 
@@ -14,26 +14,24 @@ public class Separator {
         coordList=cL;
     }
 
-    void setLineCount(){
-        this.lineCount++;
-    }
-
     void setLines(){
         while(coordList!=null){
             calculateLine();
+            appendLine();
         }
     }
 
-    void appendLines(){
+    void appendLine(){
         if(true){
-            lineList.add("h"+line);
+            lineList.add("h "+new Integer(line).toString()+" \n");
         }else{
-            lineList.add("v"+line);
+            lineList.add("v "+new Integer(line).toString()+" \n");
         }
     }
 
     void calculateLine(){
-
+        line=0;
+        lineCount++;
     }
 
     int getLineCount(){
