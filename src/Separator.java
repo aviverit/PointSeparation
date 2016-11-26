@@ -14,14 +14,14 @@ public class Separator {
         coordList=cL;
     }
 
-    void setLines(){
+    public void setLines(){
         while(coordList!=null){
             calculateLine();
             appendLine();
         }
     }
 
-    void appendLine(){
+    public void appendLine(){
         if(true){
             lineList.add("h "+new Integer(line).toString()+" \n");
         }else{
@@ -29,16 +29,16 @@ public class Separator {
         }
     }
 
-    void calculateLine(){
+    public void calculateLine(){
         line=0;
         lineCount++;
     }
 
-    int getLineCount(){
+    public int getLineCount(){
         return this.lineCount;
     }
 
-    List<String> getLines(){
+    public List<String> getLines(){
         return lineList;
     }
 
