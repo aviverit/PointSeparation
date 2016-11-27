@@ -32,7 +32,6 @@ public class Separator {
     public void calculateLine(){
         line=0;
         lineCount++;
-        coordList.clear();
     }
 
     public int getLineCount(){
@@ -42,5 +41,4 @@ public class Separator {
     public List<String> getLines(){
         return lineList;
     }
-
 }

@@ -43,14 +43,15 @@ public class Main {
             lineList=sep.getLines();
 
             try {
-
                 String fCFormat= String.format("%02d", fileCounter);
                 Writer wr = new FileWriter( "./output_greedy/greedy_solution"+fCFormat+".txt");
+                wr.write(lineCounter);
 
                 for(int k=0;k<lineCounter;k++) {
-
+                    wr.write("\n");
                     wr.write(lineList.get(k));
                 }
+
                 wr.close();
             } catch (IOException e) {
                 e.printStackTrace();
