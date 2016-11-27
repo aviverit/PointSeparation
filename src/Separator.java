@@ -15,7 +15,7 @@ public class Separator {
     }
 
     public void setLines(){
-        while(coordList!=null){
+        while(coordList.size()!=0){
             calculateLine();
             appendLine();
         }
@@ -32,6 +32,7 @@ public class Separator {
     public void calculateLine(){
         line=0;
         lineCount++;
+        coordList.clear();
     }
 
     public int getLineCount(){
