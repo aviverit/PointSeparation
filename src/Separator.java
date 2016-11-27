@@ -89,7 +89,6 @@ public class Separator {
             if (collectionList.get(i).size() == 1) {        //remove fully segregated points from cumulative list
                 coordList.remove(collectionList.get(i).get(0));
             }
-
         }
 
         for(int i=0; i<collectionList.size();i++) {
