@@ -19,6 +19,8 @@ public class Main {
             }
         }
 
+        System.out.println("Output files deleted.");//---------------------------------------------------------
+
         for (File ifile : dir.listFiles()) {
             fileCounter++;
             List<int[]> coordList = new ArrayList<int[]>();
@@ -34,11 +36,13 @@ public class Main {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            System.out.println("input file read");//---------------------------------------------------------
 
             Separator sep = new Separator(coordCounter, coordList);
             List<String> lineList = new ArrayList<String>();
 
             sep.setLines();
+            System.out.println("setLines completed");//---------------------------------------------------------
             lineCounter=sep.getLineCount();
             lineList=sep.getLines();
 
