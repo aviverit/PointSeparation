@@ -49,10 +49,10 @@ public class Main {
             try {
                 String fCFormat= String.format("%02d", fileCounter);
                 Writer wr = new FileWriter( "./output_greedy/greedy_solution"+fCFormat+".txt");
-                wr.write(lineCounter);
+                wr.write(Integer.toString(lineCounter));
+                wr.write("\n");
 
                 for(int k=0;k<lineCounter;k++) {
-                    wr.write("\n");
                     wr.write(lineList.get(k));
                 }
 

@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Separator {
@@ -18,6 +20,19 @@ public class Separator {
         coordCount=cC;
         coordList=cL;
     }
+
+    Comparator<List<int[]>> sizeOrder = new Comparator<List<int[]>>() {
+        @Override
+        public int compare(List<int[]> o1, List<int[]> o2) {
+            if(o1.size()<o2.size()) {
+                return -1;
+            }else if (o1.size()==o2.size()){
+                return 0;
+            }else{
+                return 1;
+            }
+        }
+    };
 
     public void setLines(){
         tempCoordList.clear();
@@ -75,6 +90,8 @@ public class Separator {
         tempCoordList.clear();
         tempCoordList.addAll(collectionList.get(0));
 
+        //Collections.sort(collectionList,sizeOrder);
+
         for (int i = 0; i < collectionList.size(); i++) {       //
             for (int j = 0; j < collectionList.size(); j++) {
                 if (i != j) {
@@ -92,7 +109,7 @@ public class Separator {
         }
 
         for(int i=0; i<collectionList.size();i++) {
-            if (collectionList.get(i).isEmpty()) {
+            if (collectionList.get(i).isEmpty()||collectionList.get(i).size()==1) {
                 collectionList.remove(i);
             }
         }
@@ -109,3 +126,5 @@ public class Separator {
         return lineList;
     }
 }
+
+
