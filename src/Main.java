@@ -38,7 +38,7 @@ public class Main {
             }
             System.out.println("input file read");//---------------------------------------------------------
 
-            Separator sep = new Separator(coordCounter, coordList);
+            Separator sep = new Separator(coordList);
             List<String> lineList = new ArrayList<String>();
 
             sep.setLines();

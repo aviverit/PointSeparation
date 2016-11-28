@@ -1,15 +1,14 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Separator {
 
     private int lineCount=0;
-    private int coordCount=0;
     private int line;
     private int orientation=0; //0 = h, 1=v
     private List<int[]> coordList = new ArrayList<int[]>();
+    private List<int[]> coordListH = new ArrayList<int[]>();
+    private List<int[]> coordListV = new ArrayList<int[]>();
     private List<String> lineList = new ArrayList<String>();
     private List<int[]> tempCoordList = new ArrayList<int[]>();
     private List<int[]> tempCoordListH = new ArrayList<int[]>();
@@ -20,8 +19,7 @@ public class Separator {
 
     private int breaker = 0;
 
-    Separator (int cC, List cL){
-        coordCount=cC;
+    Separator (List cL){
         coordList=cL;
     }
 
@@ -55,7 +53,9 @@ public class Separator {
         List<List<int[]>> collectionList2 = new ArrayList<List<int[]>>();
 
         tempCoordListH.clear();
-        tempCoordListH.addAll();
+        tempCoordListH.addAll(tempCoordList);
+        tempCoordListV.clear();
+        tempCoordListV.addAll(tempCoordList);
         line=0;
         orientation=0;
 
@@ -73,16 +73,15 @@ public class Separator {
         collectionList.add(subCollection1);
         collectionList.add(subCollection2);
 
-
-        segregateCollections();
+        segregateCollectionsH();
         collectionListH.addAll(collectionList);
 
-
-        tempCoordListH.clear();
-        tempCoordListH.addAll();
         line=0;
         orientation=1;
         segmentablePoints=0;
+
+        subCollection1.clear();
+        subCollection2.clear();
 
         while(segmentablePoints<(tempCoordListV.size()/2)){
             currentDistance++;
@@ -93,51 +92,95 @@ public class Separator {
                 }
             }
         }
+        collectionList.clear();
         subCollection2.addAll(tempCoordListV);
         subCollection2.removeAll(subCollection1);
         collectionList.add(subCollection1);
         collectionList.add(subCollection2);
 
-        segregateCollections();
+        segregateCollectionsV();
         collectionListV.addAll(collectionList);
 
         if(collectionListH.size()>collectionListV.size()) {
+            mergeLists(collectionListH, tempCoordListH, coordListH);
             line = currentDistanceH;
             orientation = 0;
         }else{
+            mergeLists(collectionListV, tempCoordListV, coordListV);
             line=currentDistanceV;
             orientation=1;
         }
     }
 
-    public void segregateCollections() {
-        tempCoordList.clear();
-        tempCoordList.addAll(collectionList.get(0));
+    public void segregateCollectionsH() {
+        tempCoordListH.clear();
+        tempCoordListH.addAll(collectionListH.get(0));
 
-        for (int i = 0; i < collectionList.size(); i++) {       //
-            for (int j = 0; j < collectionList.size(); j++) {
+        for (int i = 0; i < collectionListH.size(); i++) {       //
+            for (int j = 0; j < collectionListH.size(); j++) {
                 if (i != j) {
-                    collectionList.get(i).removeAll(collectionList.get(j));
-                    if (tempCoordList.size() < collectionList.get(j).size()) {
-                        tempCoordList.clear();
-                        tempCoordList.addAll(collectionList.get(j));
+                    collectionListH.get(i).removeAll(collectionListH.get(j));
+                    if (tempCoordListH.size() < collectionListH.get(j).size()) {
+                        tempCoordListH.clear();
+                        tempCoordListH.addAll(collectionListH.get(j));
                     }
                 }
             }
 
-            if (collectionList.get(i).size() == 1) {        //remove fully segregated points from cumulative list
-                coordList.remove(collectionList.get(i).get(0));
+            if (collectionListH.get(i).size() == 1) {        //remove fully segregated points from cumulative list
+                coordListH.remove(collectionListH.get(i).get(0));
             }
         }
 
-        for(int i=0; i<collectionList.size();i++) {
-            if (collectionList.get(i).isEmpty()||collectionList.get(i).size()==1) {
-                collectionList.remove(i);
+        for(int i=0; i<collectionListH.size();i++) {
+            if (collectionListH.get(i).isEmpty()||collectionListH.get(i).size()==1) {
+                collectionListH.remove(i);
             }
         }
-        for(int i=0; i<collectionList.size();i++) {
-            System.out.println(collectionList.get(i));
+        for(int i=0; i<collectionListH.size();i++) {
+            System.out.println(collectionListH.get(i));
         }
+    }
+
+    public void segregateCollectionsV() {
+        tempCoordListV.clear();
+        tempCoordListV.addAll(collectionListV.get(0));
+
+        for (int i = 0; i < collectionListV.size(); i++) {       //
+            for (int j = 0; j < collectionListV.size(); j++) {
+                if (i != j) {
+                    collectionListV.get(i).removeAll(collectionListV.get(j));
+                    if (tempCoordListV.size() < collectionListV.get(j).size()) {
+                        tempCoordListV.clear();
+                        tempCoordListV.addAll(collectionListV.get(j));
+                    }
+                }
+            }
+
+            if (collectionListV.get(i).size() == 1) {        //remove fully segregated points from cumulative list
+                coordListV.remove(collectionListV.get(i).get(0));
+            }
+        }
+
+        for(int i=0; i<collectionListV.size();i++) {
+            if (collectionListV.get(i).isEmpty()||collectionListV.get(i).size()==1) {
+                collectionListV.remove(i);
+            }
+        }
+        for(int i=0; i<collectionListV.size();i++) {
+            System.out.println(collectionListV.get(i));
+        }
+    }
+
+    public void mergeLists(List<List<int[]>> colL, List<int[]> tCL, List<int[]> coordL){//After orientation is decided, set real lists their H or V counterparts
+        collectionList.clear();
+        collectionList.addAll(colL);
+
+        tempCoordList.clear();
+        tempCoordList.addAll(tCL);
+
+        coordList.clear();
+        coordList.addAll(coordL);
     }
 
     public int getLineCount(){
