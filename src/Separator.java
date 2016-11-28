@@ -73,8 +73,8 @@ public class Separator {
         collectionList.add(subCollection1);
         collectionList.add(subCollection2);
 
-        segregateCollectionsH();
         collectionListH.addAll(collectionList);
+        segregateCollectionsH();
 
         line=0;
         orientation=1;
@@ -98,8 +98,8 @@ public class Separator {
         collectionList.add(subCollection1);
         collectionList.add(subCollection2);
 
-        segregateCollectionsV();
         collectionListV.addAll(collectionList);
+        segregateCollectionsV();
 
         if(collectionListH.size()>collectionListV.size()) {
             mergeLists(collectionListH, tempCoordListH, coordListH);
