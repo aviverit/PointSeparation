@@ -11,8 +11,12 @@ public class Separator {
     private int orientation=0; //0 = h, 1=v
     private List<int[]> coordList = new ArrayList<int[]>();
     private List<String> lineList = new ArrayList<String>();
-    List<int[]> tempCoordList = new ArrayList<int[]>();
+    private List<int[]> tempCoordList = new ArrayList<int[]>();
+    private List<int[]> tempCoordListH = new ArrayList<int[]>();
+    private List<int[]> tempCoordListV = new ArrayList<int[]>();
     private List<List<int[]>> collectionList = new ArrayList<List<int[]>>();
+    private List<List<int[]>> collectionListH = new ArrayList<List<int[]>>();
+    private List<List<int[]>> collectionListV = new ArrayList<List<int[]>>();
 
     private int breaker = 0;
 
@@ -20,19 +24,6 @@ public class Separator {
         coordCount=cC;
         coordList=cL;
     }
-
-    Comparator<List<int[]>> sizeOrder = new Comparator<List<int[]>>() {
-        @Override
-        public int compare(List<int[]> o1, List<int[]> o2) {
-            if(o1.size()<o2.size()) {
-                return -1;
-            }else if (o1.size()==o2.size()){
-                return 0;
-            }else{
-                return 1;
-            }
-        }
-    };
 
     public void setLines(){
         tempCoordList.clear();
@@ -48,49 +39,80 @@ public class Separator {
     public void appendLine(){
         lineCount++;
         if(orientation==0){
-            lineList.add("h "+ Integer.toString(line) +" \n");
+            lineList.add("h "+ Integer.toString(line) +".5 \n");
         }else{
-            lineList.add("v "+ Integer.toString(line) +" \n");
+            lineList.add("v "+ Integer.toString(line) +".5 \n");
         }
     }
 
     public void calculateLine(){
         int segmentablePoints=0;
         int currentDistance=0;
-        List<int[]> subCollection1 = new ArrayList<int[]>();
+        int currentDistanceH=0;
+        int currentDistanceV=0;
+        List<int[]> subCollection1 = new ArrayList<int[]>();//May need to be deprecated. Instead create enough lists  to double tempCoordList
         List<int[]> subCollection2 = new ArrayList<int[]>();
+        List<List<int[]>> collectionList2 = new ArrayList<List<int[]>>();
 
+        tempCoordListH.clear();
+        tempCoordListH.addAll();
         line=0;
-        if(orientation==1){ //NOOOOOTTTTTGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDD
-            orientation=0;
-        }else{
-            orientation=1;
-        }
+        orientation=0;
 
-        while(segmentablePoints<(tempCoordList.size()/2)){
+        while(segmentablePoints<(tempCoordListH.size()/2)){
             currentDistance++;
-            for(int i=0; i<tempCoordList.size();i++){
-                if(currentDistance==tempCoordList.get(i)[orientation]){
+            for(int i=0; i<tempCoordListH.size();i++){
+                if(currentDistance==tempCoordListH.get(i)[orientation]){
                     segmentablePoints++;
-                    subCollection1.add(tempCoordList.get(i)); //Will work on all points equidistant from axis.
+                    subCollection1.add(tempCoordListH.get(i)); //Will work on all points equidistant from axis.
                 }
             }
         }
-        subCollection2.addAll(tempCoordList);
+        subCollection2.addAll(tempCoordListH);
+        subCollection2.removeAll(subCollection1);
+        collectionList.add(subCollection1);
+        collectionList.add(subCollection2);
+
+
+        segregateCollections();
+        collectionListH.addAll(collectionList);
+
+
+        tempCoordListH.clear();
+        tempCoordListH.addAll();
+        line=0;
+        orientation=1;
+        segmentablePoints=0;
+
+        while(segmentablePoints<(tempCoordListV.size()/2)){
+            currentDistance++;
+            for(int i=0; i<tempCoordListV.size();i++){
+                if(currentDistance==tempCoordListV.get(i)[orientation]){
+                    segmentablePoints++;
+                    subCollection1.add(tempCoordListV.get(i)); //Will work on all points equidistant from axis.
+                }
+            }
+        }
+        subCollection2.addAll(tempCoordListV);
         subCollection2.removeAll(subCollection1);
         collectionList.add(subCollection1);
         collectionList.add(subCollection2);
 
         segregateCollections();
+        collectionListV.addAll(collectionList);
 
-        line=currentDistance;
+        if(collectionListH.size()>collectionListV.size()) {
+            line = currentDistanceH;
+            orientation = 0;
+        }else{
+            line=currentDistanceV;
+            orientation=1;
+        }
     }
 
     public void segregateCollections() {
         tempCoordList.clear();
         tempCoordList.addAll(collectionList.get(0));
-
-        //Collections.sort(collectionList,sizeOrder);
 
         for (int i = 0; i < collectionList.size(); i++) {       //
             for (int j = 0; j < collectionList.size(); j++) {
