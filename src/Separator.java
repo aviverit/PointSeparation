@@ -26,11 +26,15 @@ public class Separator {
     public void setLines(){
         tempCoordList.clear();
         tempCoordList.addAll(coordList);
+        tempCoordListH.clear();
+        tempCoordListH.addAll(tempCoordList);
+        tempCoordListV.clear();
+        tempCoordListV.addAll(tempCoordList);
         while(coordList.size()!=0 && breaker<10){
             calculateLine();
             System.out.println("1 lineCalculated");//---------------------------------------------------------
             appendLine();
-            breaker++;
+            //breaker++;
         }
     }
 
@@ -49,14 +53,14 @@ public class Separator {
         int currentDistanceV=0;
         List<int[]> subCollection1 = new ArrayList<int[]>();//May need to be deprecated. Instead create enough lists  to double tempCoordList
         List<int[]> subCollection2 = new ArrayList<int[]>();
-        List<List<int[]>> collectionList2 = new ArrayList<List<int[]>>();
 
         tempCoordListH.clear();
-        tempCoordListH.addAll(tempCoordList);
+        tempCoordListH.addAll(tempCoordList);//get largest subcollection
         tempCoordListV.clear();
         tempCoordListV.addAll(tempCoordList);
+
         line=0;
-        orientation=0;
+        orientation=1;
 
         while(segmentablePoints<(tempCoordListH.size()/2)){
             currentDistanceH++;
@@ -67,6 +71,7 @@ public class Separator {
                 }
             }
         }
+
         subCollection2.addAll(tempCoordListH);
         subCollection2.removeAll(subCollection1);
         collectionList.add(subCollection1);
@@ -76,7 +81,7 @@ public class Separator {
         segregateCollectionsH();
 
         line=0;
-        orientation=1;
+        orientation=0;
         segmentablePoints=0;
 
         subCollection1.clear();
@@ -100,7 +105,7 @@ public class Separator {
         collectionListV.addAll(collectionList);
         segregateCollectionsV();
 
-        if(collectionListH.size()>collectionListV.size()) {
+        if(coordListH.size()<coordListV.size()){//if(collectionListH.size()>collectionListV.size()) {//<=
             mergeLists(collectionListH, tempCoordListH, coordListH);
             line = currentDistanceH;
             orientation = 0;
@@ -113,69 +118,66 @@ public class Separator {
 
     public void segregateCollectionsH() {
         tempCoordListH.clear();
-        tempCoordListH.addAll(collectionListH.get(0));
+        tempCoordListH.addAll(collectionListH.get(0)); //problem? no.
         coordListH.clear();
         coordListH.addAll(coordList);
 
-        for (int i = 0; i < collectionListH.size(); i++) {       //
+        for (int i = 0; i < collectionListH.size(); i++) {       //assign tempCoordListH to largest collection of unsegregated coords.
             for (int j = 0; j < collectionListH.size(); j++) {
                 if (i != j) {
-                    if(collectionListH.get(i).size()>collectionListH.get(j).size()) {
-                        collectionListH.get(i).removeAll(collectionListH.get(j));
-                    }
-                    if (tempCoordListH.size() < collectionListH.get(j).size()) {
+                    System.out.println(collectionListH.get(i).get(0)[0]);
+                    System.out.println(collectionListH.size());
+                }
+            }
+        }
+
+        for (int i = 0; i < collectionListH.size(); i++) {       //assign tempCoordListH to largest collection of unsegregated coords.
+            for (int j = 0; j < collectionListH.size(); j++) {
+                if (i != j) {
+                    if (tempCoordListH.size() < collectionListH.get(i).size()) {
                         tempCoordListH.clear();
-                        tempCoordListH.addAll(collectionListH.get(j));
+                        tempCoordListH.addAll(collectionListH.get(i));
                     }
                 }
             }
 
             if (collectionListH.get(i).size() == 1) {        //remove fully segregated points from cumulative list
-                coordListH.remove(collectionListH.get(i).get(0));
+                coordListH.remove(collectionListH.get(i).get(0));//.get(0)? Nevermind. size 1 means only coord is at index 0. Duh.
             }
         }
 
         for(int i=0; i<collectionListH.size();i++) {
-            if (collectionListH.get(i).isEmpty()||collectionListH.get(i).size()==1) {
+            if (collectionListH.get(i).isEmpty()){//||collectionListH.get(i).size()==1) {
                 collectionListH.remove(i);
             }
-        }
-        for(int i=0; i<collectionListH.size();i++) {
-            System.out.println(collectionListH.get(i));
         }
     }
 
     public void segregateCollectionsV() {
         tempCoordListV.clear();
-        tempCoordListV.addAll(collectionListV.get(0));
+        tempCoordListV.addAll(collectionListV.get(0)); //problem? no.
         coordListV.clear();
         coordListV.addAll(coordList);
 
-        for (int i = 0; i < collectionListV.size(); i++) {       //
+        for (int i = 0; i < collectionListV.size(); i++) {       //assign tempCoordListV to largest collection of unsegregated coords.
             for (int j = 0; j < collectionListV.size(); j++) {
                 if (i != j) {
-                    if(collectionListV.get(i).size()>collectionListV.get(j).size()) {
-                        collectionListV.get(i).removeAll(collectionListV.get(j));
-                    }
-                    if (tempCoordListV.size() < collectionListV.get(j).size()) {
+                    if (tempCoordListV.size() < collectionListV.get(i).size()) {
                         tempCoordListV.clear();
-                        tempCoordListV.addAll(collectionListV.get(j));
+                        tempCoordListV.addAll(collectionListV.get(i));
                     }
                 }
             }
 
             if (collectionListV.get(i).size() == 1) {        //remove fully segregated points from cumulative list
-                coordListV.remove(collectionListV.get(i).get(0));
+                coordListV.remove(collectionListV.get(i).get(0));//.get(0)? Nevermind. size 1 means only coord is at index 0. Duh.
             }
         }
 
         for(int i=0; i<collectionListV.size();i++) {
-            if (collectionListV.get(i).isEmpty()||collectionListV.get(i).size()==1) {
+            if (collectionListV.get(i).isEmpty()){//||collectionListV.get(i).size()==1) {
                 collectionListV.remove(i);
             }
-        }
-        for(int i=0; i<collectionListV.size();i++) {
-            System.out.println(collectionListV.get(i));
         }
     }
 
