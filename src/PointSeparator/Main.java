@@ -1,3 +1,5 @@
+package PointSeparator;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,7 @@ public class Main {
 
             try {
                 String fCFormat= String.format("%02d", fileCounter);
-                Writer wr = new FileWriter( "./output_greedy/greedy_solution"+fCFormat+".txt");
+                Writer wr = new FileWriter( "./output_greedy/greedy_solution"+fCFormat);//+".txt");
                 wr.write(Integer.toString(lineCounter));
                 wr.write("\n");
 

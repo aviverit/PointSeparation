@@ -1,3 +1,5 @@
+package PointSeparator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +44,10 @@ public class Separator2 {
         lineCount++;
         if(orientation==0){
             lineList.add("h "+ Integer.toString(line) +".5 \n");
+            System.out.println("h "+ Integer.toString(line) +".5 \n");
         }else{
             lineList.add("v "+ Integer.toString(line) +".5 \n");
+            System.out.println("v "+ Integer.toString(line) +".5 \n");
         }
     }
 
@@ -64,6 +68,10 @@ public class Separator2 {
         largestCoordCollectionV.addAll(largestCoordCollection);
         allUnsegregatedCoordsH.addAll(allUnsegregatedCoords);
         allUnsegregatedCoordsV.addAll(allUnsegregatedCoords);
+        System.out.println("largestcoordcollectionGen");
+        for(int i=0;i<largestCoordCollection.size();i++){
+            System.out.println(Arrays.toString(largestCoordCollection.get(i)));
+        }
 
         while(segmentablePoints<((largestCoordCollectionH.size())/2)){
             currentDistanceH++;
@@ -72,9 +80,11 @@ public class Separator2 {
                     segmentablePoints++;
                     subCollection1H.add(largestCoordCollectionH.get(i)); //Will work on all points equidistant from axis.
                 }
-                if(currentDistanceH==allCoords.get(i)[orientation]) {
-                    if (!largestCoordCollectionH.contains(allCoords.get(i))){//(!subCollection1.contains(allCoords.get(i))) {
-                        subCollection1H.add(allCoords.get(i)); //Will work on all points equidistant from axis.
+            }
+            for(int j=0;j<allCoords.size();j++) {
+                if (currentDistanceH == allCoords.get(j)[orientation]) {
+                    if (!largestCoordCollectionH.contains(allCoords.get(j))) {//(!subCollection1.contains(allCoords.get(i))) {
+                        subCollection1H.add(allCoords.get(j)); //Will work on all points equidistant from axis.
                     }
                 }
             }
@@ -92,6 +102,11 @@ public class Separator2 {
         orientation=0;
         segmentablePoints=0;
 
+        System.out.println("largestcoordcollectionV");
+        for(int i=0;i<largestCoordCollectionV.size();i++){
+            System.out.println(Arrays.toString(largestCoordCollectionV.get(i)));
+        }
+
         while(segmentablePoints<((largestCoordCollectionV.size())/2)){
             currentDistanceV++;
             for(int i=0; i<largestCoordCollectionV.size();i++){
@@ -99,9 +114,11 @@ public class Separator2 {
                     segmentablePoints++;
                     subCollection1V.add(largestCoordCollectionV.get(i)); //Will work on all points equidistant from axis.
                 }
-                if(currentDistanceV==allCoords.get(i)[orientation]) {
-                    if (!largestCoordCollectionV.contains(allCoords.get(i))){//(!subCollection1.contains(largestCoordCollectionV.get(i))) {
-                        subCollection1V.add(allCoords.get(i)); //Will work on all points equidistant from axis.
+            }
+            for(int j=0;j<allCoords.size();j++) {
+                if (currentDistanceV == allCoords.get(j)[orientation]) {
+                    if (!largestCoordCollectionV.contains(allCoords.get(j))) {//(!subCollection1.contains(largestCoordCollectionV.get(i))) {
+                        subCollection1V.add(allCoords.get(j)); //Will work on all points equidistant from axis.
                     }
                 }
             }
@@ -120,7 +137,7 @@ public class Separator2 {
         officialCollectionListV.addAll(officialCollectionList);
         segregateCollectionsV();
 
-        if(officialCollectionListH.size()>=officialCollectionListV.size()){//(largestCoordCollectionH.size()<=largestCoordCollectionV.size()){//(allUnsegregatedCoordsH.size()<allUnsegregatedCoordsV.size()){//if(collectionListH.size()>collectionListV.size())
+        if(allUnsegregatedCoordsH.size()<allUnsegregatedCoordsV.size()){//(officialCollectionListH.size()>=officialCollectionListV.size()){//(largestCoordCollectionH.size()<largestCoordCollectionV.size()){//(allUnsegregatedCoordsH.size()<allUnsegregatedCoordsV.size()){//
             mergeLists(officialCollectionListH, largestCoordCollectionH, allUnsegregatedCoordsH);
             line = currentDistanceH;
             orientation = 0;
