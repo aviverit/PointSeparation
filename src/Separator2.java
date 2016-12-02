@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Separator2 {
@@ -33,7 +34,7 @@ public class Separator2 {
             calculateLine();
             System.out.println("1 lineCalculated");//---------------------------------------------------------
             appendLine();
-            breaker++;
+            //breaker++;
         }
     }
 
@@ -50,67 +51,76 @@ public class Separator2 {
         int segmentablePoints=0;
         int currentDistanceH=0;
         int currentDistanceV=0;
-        List<int[]> subCollection1 = new ArrayList<int[]>();
-        List<int[]> subCollection2 = new ArrayList<int[]>();
+        List<int[]> subCollection1H = new ArrayList<int[]>();
+        List<int[]> subCollection2H = new ArrayList<int[]>();
+        List<int[]> subCollection1V = new ArrayList<int[]>();
+        List<int[]> subCollection2V = new ArrayList<int[]>();
         orientation=1;
         largestCoordCollectionH.clear();
         largestCoordCollectionV.clear();
+        allUnsegregatedCoordsH.clear();
+        allUnsegregatedCoordsV.clear();
         largestCoordCollectionH.addAll(largestCoordCollection);
         largestCoordCollectionV.addAll(largestCoordCollection);
         allUnsegregatedCoordsH.addAll(allUnsegregatedCoords);
         allUnsegregatedCoordsV.addAll(allUnsegregatedCoords);
 
-        while(segmentablePoints<(largestCoordCollectionH.size()/2)){
+        while(segmentablePoints<((largestCoordCollectionH.size())/2)){
             currentDistanceH++;
             for(int i=0; i<largestCoordCollectionH.size();i++){
                 if(currentDistanceH==largestCoordCollectionH.get(i)[orientation]){
                     segmentablePoints++;
-                    subCollection1.add(largestCoordCollectionH.get(i)); //Will work on all points equidistant from axis.
+                    subCollection1H.add(largestCoordCollectionH.get(i)); //Will work on all points equidistant from axis.
                 }
                 if(currentDistanceH==allCoords.get(i)[orientation]) {
-                    if (!subCollection1.contains(largestCoordCollectionH.get(i))) {
-                        subCollection1.add(largestCoordCollectionH.get(i)); //Will work on all points equidistant from axis.
+                    if (!largestCoordCollectionH.contains(allCoords.get(i))){//(!subCollection1.contains(allCoords.get(i))) {
+                        subCollection1H.add(allCoords.get(i)); //Will work on all points equidistant from axis.
                     }
                 }
             }
         }
-        subCollection2.addAll(allCoords);
-        subCollection2.removeAll(subCollection1);
-        officialCollectionList.add(subCollection1);
-        officialCollectionList.add(subCollection2);
+        subCollection2H.addAll(allCoords);
+        subCollection2H.removeAll(subCollection1H);
+        officialCollectionList.add(subCollection1H);
+        officialCollectionList.add(subCollection2H);
+
+        officialCollectionListH.clear();
 
         officialCollectionListH.addAll(officialCollectionList);
         segregateCollectionsH();
 
         orientation=0;
         segmentablePoints=0;
-        subCollection1.clear();
-        subCollection2.clear();
 
-        while(segmentablePoints<(largestCoordCollectionV.size()/2)){
+        while(segmentablePoints<((largestCoordCollectionV.size())/2)){
             currentDistanceV++;
             for(int i=0; i<largestCoordCollectionV.size();i++){
                 if(currentDistanceV==largestCoordCollectionV.get(i)[orientation]){
                     segmentablePoints++;
-                    subCollection1.add(largestCoordCollectionV.get(i)); //Will work on all points equidistant from axis.
+                    subCollection1V.add(largestCoordCollectionV.get(i)); //Will work on all points equidistant from axis.
                 }
                 if(currentDistanceV==allCoords.get(i)[orientation]) {
-                    if (!subCollection1.contains(largestCoordCollectionV.get(i))) {
-                        subCollection1.add(largestCoordCollectionV.get(i)); //Will work on all points equidistant from axis.
+                    if (!largestCoordCollectionV.contains(allCoords.get(i))){//(!subCollection1.contains(largestCoordCollectionV.get(i))) {
+                        subCollection1V.add(allCoords.get(i)); //Will work on all points equidistant from axis.
                     }
                 }
             }
         }
-        officialCollectionList.clear();
-        subCollection2.addAll(allCoords);
-        subCollection2.removeAll(subCollection1);
-        officialCollectionList.add(subCollection1);
-        officialCollectionList.add(subCollection2);
+
+        officialCollectionList.remove(officialCollectionList.size()-1);//remove the last two subcollections added for H
+        officialCollectionList.remove(officialCollectionList.size()-1);
+
+        subCollection2V.addAll(allCoords);
+        subCollection2V.removeAll(subCollection1V);
+        officialCollectionList.add(subCollection1V);
+        officialCollectionList.add(subCollection2V);
+
+        officialCollectionListV.clear();
 
         officialCollectionListV.addAll(officialCollectionList);
         segregateCollectionsV();
 
-        if(largestCoordCollectionH.size()<largestCoordCollectionV.size()){//(allUnsegregatedCoordsH.size()<allUnsegregatedCoordsV.size()){//if(collectionListH.size()>collectionListV.size()) {//<= //OOOOOOOOOORRRRRRRRRRRRRRRRRRRRR MAYBE THE LINE THAT PRODUCES THE SMALLEST LARGESTCOLLECTION IS BEST
+        if(officialCollectionListH.size()>=officialCollectionListV.size()){//(largestCoordCollectionH.size()<=largestCoordCollectionV.size()){//(allUnsegregatedCoordsH.size()<allUnsegregatedCoordsV.size()){//if(collectionListH.size()>collectionListV.size())
             mergeLists(officialCollectionListH, largestCoordCollectionH, allUnsegregatedCoordsH);
             line = currentDistanceH;
             orientation = 0;
@@ -122,22 +132,30 @@ public class Separator2 {
     }
 
     public void segregateCollectionsH() {
-        largestCoordCollectionH.clear();
-        largestCoordCollectionH.addAll(officialCollectionListH.get(0));
+
+        for(int i=0; i<officialCollectionListH.size();i++){
+            System.out.println("new collection at seg start");
+            for(int j=0; j<officialCollectionListH.get(i).size();j++) {
+                System.out.println(Arrays.toString(officialCollectionListH.get(i).get(j)));
+            }
+        }
 
         System.out.println("before segregationH");
         System.out.println(officialCollectionListH.size());
 
         List<List<int[]>> tempOfficialCollectionList = new ArrayList<List<int[]>>();
 
-        for(int i=0; i<officialCollectionListH.size()-2;i++){//n-1 and n-2 should not add themselves to the list
+        for(int i=0; i<officialCollectionListH.size()-2;i++){//n-1 and n-2 should not add themselves to the list SUUUUUUUSSSSSPEECCCTTTTTTTTTT
             if(officialCollectionListH.get(officialCollectionListH.size()-1).containsAll(officialCollectionListH.get(i))||officialCollectionListH.get(officialCollectionListH.size()-2).containsAll(officialCollectionListH.get(i))){
                 tempOfficialCollectionList.add(officialCollectionListH.get(i)); //add all collections that don't intersect the new line.
             }
         }
 
-        officialCollectionListH.removeAll(tempOfficialCollectionList);
-        System.out.println("Mid segregationH");
+        System.out.println("Mid segregationH, temp size");
+        System.out.println(tempOfficialCollectionList.size());
+
+        officialCollectionListH.removeAll(tempOfficialCollectionList);          ////suuussssppeeeccttt. Does this maintain the last two collections?
+        System.out.println("Mid segregation Post");
         System.out.println(officialCollectionListH.size());
 
         for(int i=0; i<officialCollectionListH.size()-2; i++){
@@ -153,15 +171,34 @@ public class Separator2 {
             tempOfficialCollectionList.add(subCollection2);
         }
 
-
-        if(baseCase<2) {
+        if(baseCase>=2) {
             officialCollectionListH.clear();
             officialCollectionListH.addAll(tempOfficialCollectionList);
         }
         baseCase++;
+
+        System.out.println("before removing emptysH");
+        System.out.println(officialCollectionListH.size());
+
+        for(int i = 0; i< officialCollectionListH.size(); i++) { /////////actually this appears to be not working.
+            if (officialCollectionListH.get(i).isEmpty()) {
+                officialCollectionListH.remove(i);
+                i--;
+            }
+        }
+
         System.out.println("after segregationH");
         System.out.println(officialCollectionListH.size());
 
+        for(int i=0; i<officialCollectionListH.size();i++){
+            System.out.println("new collection after segregation");
+            for(int j=0; j<officialCollectionListH.get(i).size();j++) {
+                System.out.println(Arrays.toString(officialCollectionListH.get(i).get(j)));
+            }
+        }
+
+        largestCoordCollectionH.clear();
+        largestCoordCollectionH.addAll(officialCollectionListH.get(0));
 
         for (int i = 0; i < officialCollectionListH.size(); i++) {
             if (largestCoordCollectionH.size() < officialCollectionListH.get(i).size()) { //assign largestCoordCollection to the largest collection of coords.
@@ -172,21 +209,18 @@ public class Separator2 {
                 allUnsegregatedCoordsH.remove(officialCollectionListH.get(i).get(0));
             }
         }
-
-        for(int i = 0; i< officialCollectionListH.size(); i++) {
-            if (officialCollectionListH.get(i).isEmpty()) {
-                officialCollectionListH.remove(i);
-                i--;
-            }
-        }
     }
 
     public void segregateCollectionsV() {
-        largestCoordCollectionV.clear();
-        largestCoordCollectionV.addAll(officialCollectionListV.get(0));
-
         System.out.println("before segregationV");
         System.out.println(officialCollectionListV.size());
+
+        for(int i=0; i<officialCollectionListV.size();i++){
+            System.out.println("new collection at seg startV");
+            for(int j=0; j<officialCollectionListV.get(i).size();j++) {
+                System.out.println(Arrays.toString(officialCollectionListV.get(i).get(j)));
+            }
+        }
 
         List<List<int[]>> tempOfficialCollectionList = new ArrayList<List<int[]>>();
 
@@ -196,7 +230,12 @@ public class Separator2 {
             }
         }
 
+        System.out.println("Mid segregationV, temp size");
+        System.out.println(tempOfficialCollectionList.size());
+
         officialCollectionListV.removeAll(tempOfficialCollectionList);
+        System.out.println("Mid segregationV");
+        System.out.println(officialCollectionListV.size());
 
         for(int i=0; i<officialCollectionListV.size()-2; i++){
             List<int[]> subCollection1 = new ArrayList<int[]>();
@@ -211,14 +250,34 @@ public class Separator2 {
             tempOfficialCollectionList.add(subCollection2);
         }
 
-        if(baseCase<2) {
+        if(baseCase>=2) {
             officialCollectionListV.clear();
             officialCollectionListV.addAll(tempOfficialCollectionList);
         }
         baseCase++;
+
+        System.out.println("before removing emptysV");
+        System.out.println(officialCollectionListV.size());
+
+        for(int i = 0; i< officialCollectionListV.size(); i++) {
+            if (officialCollectionListV.get(i).isEmpty()) {
+                officialCollectionListV.remove(i);
+                i--;
+            }
+        }
+
         System.out.println("after segregationV");
         System.out.println(officialCollectionListV.size());
 
+        for(int i=0; i<officialCollectionListV.size();i++){
+            System.out.println("new collection after segregationV");
+            for(int j=0; j<officialCollectionListV.get(i).size();j++) {
+                System.out.println(Arrays.toString(officialCollectionListV.get(i).get(j)));
+            }
+        }
+
+        largestCoordCollectionV.clear();
+        largestCoordCollectionV.addAll(officialCollectionListV.get(0));
 
         for (int i = 0; i < officialCollectionListV.size(); i++) {
             if (largestCoordCollectionV.size() < officialCollectionListV.get(i).size()) { //assign largestCoordCollection to the largest collection of coords.
@@ -227,13 +286,6 @@ public class Separator2 {
             }
             if (officialCollectionListV.get(i).size() == 1) {        //remove fully segregated points from cumulative list
                 allUnsegregatedCoordsV.remove(officialCollectionListV.get(i).get(0));
-            }
-        }
-
-        for(int i = 0; i< officialCollectionListV.size(); i++) {
-            if (officialCollectionListV.get(i).isEmpty()) {
-                officialCollectionListV.remove(i);
-                i--;
             }
         }
     }
@@ -247,6 +299,11 @@ public class Separator2 {
 
         allUnsegregatedCoords.clear();
         allUnsegregatedCoords.addAll(aUC);
+        System.out.println(Integer.toString(this.lineCount+1));
+        System.out.println("unsegregated coords in merge");
+        for(int i=0; i<allUnsegregatedCoords.size();i++) {
+            System.out.println(Arrays.toString(allUnsegregatedCoords.get(i)));
+        }
     }
 
     public int getLineCount(){

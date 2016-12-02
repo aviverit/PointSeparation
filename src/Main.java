@@ -57,6 +57,7 @@ public class Main {
                 }
 
                 wr.close();
+                //break;
             } catch (IOException e) {
                 e.printStackTrace();
             }
